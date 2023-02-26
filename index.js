@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-const https = require("https");
 const fs = require("fs");
 const mysql = require("mysql");
 const cors = require("cors");
@@ -18,11 +17,6 @@ const db = mysql.createConnection({
   database: "sql12601138",
   port: 3306,
 });
-
-const options = {
-  key: fs.readFileSync("key.pem"),
-  cert: fs.readFileSync("cert.pem"),
-};
 
 function genCookie(length) {
   let result = "";
@@ -306,6 +300,8 @@ app.post("/addItems", (req, res) => {
   });
 });
 
-https.createServer(options, app).listen(5000, () => {
+app.listen(5000, () => {
   console.log("HTTPS server listening on port 5000");
 });
+
+module.exports = app
