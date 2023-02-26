@@ -115,7 +115,7 @@ app.post("/addAccount", (req, res) => {
       } else {
         db.query(
           "INSERT INTO users (username, password, email) VALUES(?,?,?)",
-          [username, password, email],
+          [username, encryptText(password), email],
           (error, _result) => {
             if (error) {
               console.log(error);
@@ -142,7 +142,7 @@ app.post("/Login", (req, res) => {
     } else {
       result.forEach((element) => {
         if (element.username == username) {
-          if (element.password == password) {
+          if (element.password == decryptText(password)) {
             correct = true;
             cookieUserId = element.id;
             cookie = genCookie(20);
