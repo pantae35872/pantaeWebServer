@@ -215,7 +215,7 @@ app.post("/Login", (req, res) => {
     } else {
       result.forEach((element) => {
         if (element.username == username) {
-          
+          console.log(element.password)
           const decryptedText = decryptText(element.password)
           const Decryptpassword = decryptedText.toString();
           if (Decryptpassword == password) {
