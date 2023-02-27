@@ -214,11 +214,10 @@ app.post("/Login", (req, res) => {
       console.log(err);
     } else {
       result.forEach((element) => {
-        if (element.username == username) {
-          console.log(element.password)
-          const decryptedText = decryptText(element.password)
-          const Decryptpassword = decryptedText.toString();
-          if (Decryptpassword == password) {
+        if (element.username == username) {          
+          const encryptedBuffer = Buffer.from(element.password, 'base64');
+          const decryptedText = decryptText(encryptedBuffer)
+          if (decryptedText.toString() == password) {
             correct = true;
             cookieUserId = element.id;
             cookie = genCookie(20);
