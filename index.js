@@ -18,7 +18,8 @@ const db = mysql.createConnection({
   port: 3306,
 });
 
-const privateKey = `-----BEGIN PRIVATE KEY-----
+const privateKey = `
+-----BEGIN PRIVATE KEY-----
 MIIJQwIBADANBgkqhkiG9w0BAQEFAASCCS0wggkpAgEAAoICAQCqMNb8VcQtqGGt
 EeumyWEYKJZJPV7NHxmmefDjf1P/Va2/lPE2MVWikqq3tLFM5ZJ9VOzi72m4z5nL
 a6j8ZgE6coyBBy3KXAZuqgtvKWLlyTyOqZjxkUzXkmBvxLVjBlGd56Sg9T7qbN6z
@@ -72,7 +73,8 @@ W2Uh6DDZOE4kDbI50Jwsw63GClUr6tk=
 -----END PRIVATE KEY-----
 `
 
-const public_key = `-----BEGIN PUBLIC KEY-----
+const public_key = `
+-----BEGIN PUBLIC KEY-----
 MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAqjDW/FXELahhrRHrpslh
 GCiWST1ezR8Zpnnw439T/1Wtv5TxNjFVopKqt7SxTOWSfVTs4u9puM+Zy2uo/GYB
 OnKMgQctylwGbqoLbyli5ck8jqmY8ZFM15Jgb8S1YwZRneekoPU+6mzes+Ne4Be+
@@ -86,6 +88,7 @@ SpTxr6Qi/cin+xk5lfrDgxxJI/YUVXX4Jc9nmVJPEjRbTBvz69Uz3xyzCQr5RMf5
 eKzwDLv2YdfVBbqd8xexl4souwjwLMnfmeSH8cox2UTYevgk3xEpsh58gMx1RKxQ
 gO7ef+wGgYqWe6B/3XrSd40CAwEAAQ==
 -----END PUBLIC KEY-----
+
 `;
 
 function genCookie(length) {
@@ -185,7 +188,7 @@ app.post("/addAccount", (req, res) => {
       } else {
         db.query(
           "INSERT INTO users (username, password, email) VALUES(?,?,?)",
-          [username, encryptText(password), email],
+          [username, encryptText(password).toString('base64'), email],
           (error, _result) => {
             if (error) {
               console.log(error);
@@ -212,7 +215,7 @@ app.post("/Login", (req, res) => {
     } else {
       result.forEach((element) => {
         if (element.username == username) {
-          if (element.password == decryptText(password)) {
+          if (decryptText(element.password).toString() == password) {
             correct = true;
             cookieUserId = element.id;
             cookie = genCookie(20);
